@@ -15,7 +15,7 @@
     "*://*.daraz.com/*"
   ],
   "background": {
-    "service_worker": "background.js"
+    "service_worker": "js/background.js"
   },
   "action": {
     "default_popup": "popup.html",
@@ -33,7 +33,7 @@
         "*://*.daraz.pk/pd/*",
         "*://*.daraz.com/pd/*"
       ],
-      "js": ["content.js"],
+      "js": ["js/content.js"],
       "css": ["content.css"],
       "run_at": "document_end"
     }
