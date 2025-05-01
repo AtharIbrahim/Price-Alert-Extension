@@ -1,7 +1,5 @@
 # 🔔 Daraz Price Alert Chrome Extension
 
-[![Chrome Web Store](https://img.shields.io/chrome-web-store/v/your-extension-id?label=Chrome%20Web%20Store)](https://chrome.google.com/webstore/detail/your-extension-id)
-[![GitHub stars](https://img.shields.io/github/stars/yourusername/daraz-price-alert?style=social)](https://github.com/yourusername/daraz-price-alert)
 
 Get automatic price drop notifications from Daraz (Pakistan, Bangladesh, Sri Lanka, etc.) without constantly checking products.
 
