@@ -1,0 +1,214 @@
+body {
+  width: 300px;
+  padding: 12px;
+  font-family: Arial, sans-serif;
+  margin: 0;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 8px;
+}
+
+h1 {
+  font-size: 16px;
+  margin: 0;
+  color: #f57224;
+}
+
+#empty-state {
+  text-align: center;
+  padding: 20px 0;
+  color: #666;
+}
+
+#empty-state svg {
+  width: 48px;
+  height: 48px;
+  fill: #ddd;
+  margin-bottom: 8px;
+}
+
+#empty-state p {
+  margin: 0 0 4px;
+  font-size: 14px;
+}
+
+#empty-state small {
+  font-size: 12px;
+  color: #999;
+}
+
+#alerts-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.alert-item {
+  border: 1px solid #eee;
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.alert-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.alert-header h3 {
+  font-size: 14px;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
+}
+
+.delete-btn {
+  background: none;
+  border: none;
+  color: #f44336;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.alert-details {
+  display: flex;
+  gap: 12px;
+}
+
+.alert-details img {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+  border-radius: 4px;
+}
+
+.current-price {
+  font-weight: bold;
+  color: #f57224;
+  margin: 0 0 4px;
+  font-size: 15px;
+}
+
+.target-price {
+  margin: 0;
+  font-size: 13px;
+  color: #666;
+}
+
+
+/* Add these new styles at the bottom */
+
+.hidden {
+  display: none !important;
+}
+
+#settings-view {
+  padding: 10px;
+}
+
+.settings-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.settings-header h2 {
+  margin: 0;
+  font-size: 16px;
+  color: #f57224;
+}
+
+#backButton {
+  background: none;
+  border: none;
+  padding: 5px;
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+#backButton svg {
+  width: 20px;
+  height: 20px;
+  fill: #666;
+}
+
+#backButton:hover svg {
+  fill: #f57224;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  font-size: 13px;
+}
+
+.form-group select {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+#saveSettings {
+  width: 100%;
+  background: #f57224;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+#saveSettings:hover {
+  background: #e5671f;
+}
+
+#status-message {
+  margin-top: 10px;
+  font-size: 12px;
+  color: #4CAF50;
+  text-align: center;
+}
+/* Add these styles */
+.settings-button {
+  background: none;
+  border: none;
+  padding: 5px;
+  cursor: pointer;
+  margin-left: auto; /* Pushes the button to the right */
+}
+
+.settings-button svg {
+  width: 20px;
+  height: 20px;
+  fill: #666; /* Default color */
+  transition: fill 0.2s ease;
+}
+
+.settings-button:hover svg {
+  fill: #f57224; /* Orange color on hover */
+}
