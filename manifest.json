@@ -34,7 +34,7 @@
         "*://*.daraz.com/pd/*"
       ],
       "js": ["js/content.js"],
-      "css": ["style/content.css"],
+      "css": ["styles/content.css"],
       "run_at": "document_end"
     }
   ],
