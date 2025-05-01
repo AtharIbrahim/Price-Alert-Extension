@@ -122,7 +122,7 @@ async function getCurrentPrice(url, selector) {
 function showNotification(alert, currentPrice) {
   chrome.notifications.create(`alert-${Date.now()}`, {
     type: 'basic',
-    iconUrl: 'icon.png',
+    iconUrl: 'icons/icon.png',
     title: 'Price Alert Triggered!',
     message: `${alert.title}\n\nCurrent Price: Rs.${currentPrice}\nYour Target: Rs.${alert.targetPrice}`,
     buttons: [{ title: 'View Product' }]
