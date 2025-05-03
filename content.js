@@ -2,7 +2,10 @@
 const SITES = {
   DARAZ: 'daraz',
   AMAZON: 'amazon',
-  PAKWHEELS: 'pakwheels'
+  PAKWHEELS: 'pakwheels',
+  OLX: 'olx',
+  PriceOye: 'priceoye',
+  AliBaba: 'alibaba'
 };
 
 // Site configurations
@@ -42,8 +45,42 @@ const SITE_CONFIGS = {
     imageSelector: '.slider-thumb',
     currency: 'PKR',
     symbol: 'Lakh.'
+  },
+  olx: {
+    productPagePatterns: [/\/item\//],
+    priceSelectors: [
+      '._24469da7',
+      '.Price'
+    ],
+    titleSelector: '._75bce902',
+    imageSelector: '.cf8850e1',
+    currency: 'PKR',
+    symbol: 'Rs.'
+  },
+  priceoye: {
+    productPagePatterns: [/\/[^\/]+\/[^\/]+\/[^\/]+$/],
+    priceSelectors: [
+      '.summary-price',
+      '.price-size-lg'
+    ],
+    titleSelector: '.product-title .h2',
+    imageSelector: '.main-product-img',
+    currency: 'PKR',
+    symbol: 'Rs.'
+  },
+  alibaba: {
+    productPagePatterns: [/\/product-detail\//],
+    priceSelectors: [
+      '.price-item .id-flex span',
+      '.price-size-lg'
+    ],
+    titleSelector: '.product-title-container h1',
+    imageSelector: '.id-h-full',
+    currency: 'USD',
+    symbol: '$'
   }
 };
+
 // Wait for page to load
 if (document.readyState === 'complete') {
   initialize();
@@ -61,6 +98,9 @@ async function initialize() {
   if (hostname.includes('daraz')) currentSite = SITES.DARAZ;
   else if (hostname.includes('amazon')) currentSite = SITES.AMAZON;
   else if (hostname.includes('pakwheels')) currentSite = SITES.PAKWHEELS;
+  else if (hostname.includes('olx')) currentSite = SITES.OLX;
+  else if (hostname.includes('priceoye')) currentSite = SITES.PriceOye;
+  else if (hostname.includes('alibaba')) currentSite = SITES.AliBaba;
   
   if (!enabledSites?.includes(currentSite)) {
     console.log('Price alerts disabled for this site');
@@ -84,6 +124,9 @@ function getCurrentSite() {
   if (hostname.includes('daraz')) return SITES.DARAZ;
   if (hostname.includes('amazon')) return SITES.AMAZON;
   if (hostname.includes('pakwheels')) return SITES.PAKWHEELS;
+  if (hostname.includes('olx')) return SITES.OLX;
+  if (hostname.includes('priceoye')) return SITES.PriceOye;
+  if (hostname.includes('alibaba')) return SITES.AliBaba;
   return null;
 }
 
@@ -106,6 +149,15 @@ function getCurrentSiteConfig() {
   }
   if (hostname.includes('pakwheels.')) {
     return SITE_CONFIGS.pakwheels;
+  }
+  if (hostname.includes('olx.')) {
+    return SITE_CONFIGS.olx;
+  }
+  if (hostname.includes('priceoye.')) {
+    return SITE_CONFIGS.priceoye;
+  }
+  if (hostname.includes('alibaba.')) {
+    return SITE_CONFIGS.alibaba;
   }
   // Default to Daraz configuration
   return SITE_CONFIGS.daraz;
@@ -149,7 +201,7 @@ function createSlidingAlertButton() {
     .dpa-button-container {
       display: flex;
       align-items: center;
-      background: #f57224;
+      background: linear-gradient(90deg, #E14C24 0%, #E14C24 50%, #E14C24 100%);
       padding: 10px 10px 10px 10px;
       transform: translateX(calc(100% - 40px));
       border-radius: 25px 0 0 25px;
@@ -261,7 +313,10 @@ async function handleButtonClick() {
     targetPrice: targetPrice,
     lastChecked: new Date().toISOString(),
     site: hostname.includes('amazon.') ? 'amazon' : 
-          hostname.includes('pakwheels.') ? 'pakwheels' : 'daraz',
+          hostname.includes('pakwheels.') ? 'pakwheels' :
+          hostname.includes('olx.') ? 'olx' :
+          hostname.includes('priceoye.') ? 'priceoye' :
+          hostname.includes('alibaba.') ? 'alibaba' : 'daraz',
     currency: siteConfig.currency,
     symbol: siteConfig.symbol
   };

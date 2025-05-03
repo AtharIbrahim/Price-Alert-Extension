@@ -18,7 +18,16 @@
     "*://*.amazon.de/*",
     "*://*.amazon.pk/*",
     "*://*.pakwheels.pk/*",
-    "*://*.pakwheels.com/*"   
+    "*://*.pakwheels.com/*",
+    "*://*.olx.com.pk/*",
+    "*://*.olx.com/*",
+    "*://*.olx.pk/*",
+    "*://*.priceoye.com.pk/*",
+    "*://*.priceoye.com/*",
+    "*://*.priceoye.pk/*",
+    "*://*.alibaba.com.pk/*",
+    "*://*.alibaba.com/*",
+    "*://*.alibaba.pk/*"
   ],
   "background": {
     "service_worker": "background.js"
@@ -47,7 +56,16 @@
         "*://*.pakwheels.pk/used-cars/*",
         "*://*.pakwheels.com/new-cars/*",
         "*://*.pakwheels.pk/new-cars/*",
-        "*://*.pakwheels.com/used-cars/*"
+        "*://*.pakwheels.com/used-cars/*",
+        "*://*.olx.com.pk/item/*",
+        "*://*.olx.com/item/*",
+        "*://*.olx.pk/item/*",
+        "*://*.priceoye.com.pk/*/*/*",
+        "*://*.priceoye.com/*/*/*",
+        "*://*.priceoye.pk/*/*/*",
+        "*://*.alibaba.com.pk/product-detail/*",
+        "*://*.alibaba.com/product-detail/*",
+        "*://*.alibaba.pk/product-detail/*"
       ],
       "js": ["content.js"],
       "css": ["content.css"],

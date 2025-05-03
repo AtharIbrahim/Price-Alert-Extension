@@ -11,6 +11,18 @@ const SITE_CONFIGS = {
   pakwheels: {
     currency: 'PKR',
     symbol: 'Lakh.'
+  },
+  olx: {
+    currency: 'PKR',
+    symbol: 'Rs.'
+  },
+  priceoye: {
+    currency: 'PKR',
+    symbol: 'Rs.'
+  },
+  alibaba: {
+    currency: 'USD',
+    symbol: '$'
   }
 };
 

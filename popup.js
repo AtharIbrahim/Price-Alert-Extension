@@ -2,7 +2,10 @@
 const SITES = {
   DARAZ: 'daraz',
   AMAZON: 'amazon',
-  PAKWHEELS: 'pakwheels'
+  PAKWHEELS: 'pakwheels',
+  OLX: 'olx',
+  PriceOye: 'priceoye',
+  AliBaba: 'alibaba'
 };
 document.addEventListener('DOMContentLoaded', () => {
   // Load alerts initially
@@ -38,12 +41,16 @@ async function loadSettings() {
   const enabledSites = settings.enabledSites || [
     SITES.DARAZ, 
     SITES.AMAZON, 
-    SITES.PAKWHEELS
+    SITES.PAKWHEELS,
+    SITES.OLX
   ];
   
   document.getElementById('toggleDaraz').checked = enabledSites.includes(SITES.DARAZ);
   document.getElementById('toggleAmazon').checked = enabledSites.includes(SITES.AMAZON);
   document.getElementById('togglePakWheels').checked = enabledSites.includes(SITES.PAKWHEELS);
+  document.getElementById('toggleOLX').checked = enabledSites.includes(SITES.OLX);
+  document.getElementById('togglePriceOye').checked = enabledSites.includes(SITES.PriceOye);
+  document.getElementById('toggleAliBaba').checked = enabledSites.includes(SITES.AliBaba);
 }
 
 // Update saveSettings function
@@ -54,6 +61,9 @@ async function saveSettings() {
   if (document.getElementById('toggleDaraz').checked) enabledSites.push(SITES.DARAZ);
   if (document.getElementById('toggleAmazon').checked) enabledSites.push(SITES.AMAZON);
   if (document.getElementById('togglePakWheels').checked) enabledSites.push(SITES.PAKWHEELS);
+  if (document.getElementById('toggleOLX').checked) enabledSites.push(SITES.OLX);
+  if (document.getElementById('togglePriceOye').checked) enabledSites.push(SITES.PriceOye);
+  if (document.getElementById('toggleAliBaba').checked) enabledSites.push(SITES.AliBaba);
   
   await chrome.storage.sync.set({ 
     checkInterval: interval,
