@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PricePatrol - Download</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #f0f4ff, #e6f0fa);
+      color: #222;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    h1 {
+      font-size: 2.8rem;
+      margin-bottom: 0.5rem;
+      color: rgb(225, 76, 36);
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+    }
+
+    p {
+      font-size: 1.2rem;
+      margin-bottom: 2rem;
+      color: #444;
+      text-align: center;
+      max-width: 500px;
+    }
+
+    a.download-btn {
+      text-decoration: none;
+      background: linear-gradient(to right,  rgb(225, 76, 36),  rgb(255, 131, 29));
+      color: white;
+      padding: 0.9rem 2rem;
+      border-radius: 12px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      box-shadow: 0 8px 16px  rgba(225, 77, 36, 0.2);
+      transition: all 0.3s ease;
+    }
+
+    a.download-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px  rgba(225, 77, 36, 0.3);
+    }
+
+    .footer {
+      position: absolute;
+      bottom: 20px;
+      font-size: 0.9rem;
+      color: #666;
+      text-align: center;
+    }
+
+    .footer a {
+      color:  rgb(225, 76, 36);
+      text-decoration: none;
+    }
+
+    .footer a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <h1>🔔 PricePatrol</h1>
+  <p>Never miss a deal again. Download the extension and get notified when prices drop on your favorite products.</p>
+  <a href="/Price-Alert-Extension.zip" class="download-btn" download>⬇ Download Extension</a>
+
+  <div class="footer">
+    <a href="https://atharibrahimkhalid.netlify.app" target="_blank">www.atharibrahimkhalid.netlify.app</a> &nbsp;|&nbsp; © 2025 PricePatrol
+  </div>
+</body>
+</html>
