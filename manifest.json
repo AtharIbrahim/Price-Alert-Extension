@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Daraz Price Alert",
-  "version": "1.4",
+  "version": "1.0",
   "description": "Get notified when prices drop on Daraz",
   "permissions": [
     "storage",
