@@ -112,7 +112,7 @@ h1 {
 }
 
 
-/* Add these new styles at the bottom */
+/*  */
 
 .hidden {
   display: none !important;
@@ -193,7 +193,8 @@ h1 {
   color: #4CAF50;
   text-align: center;
 }
-/* Add these styles */
+
+/*  */
 .settings-button {
   background: none;
   border: none;
