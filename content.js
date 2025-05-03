@@ -47,7 +47,7 @@ const SITE_CONFIGS = {
     symbol: 'Lakh.'
   },
   olx: {
-    productPagePatterns: [/\/item\//],
+    productPagePatterns: [/\/item\//,],
     priceSelectors: [
       '._24469da7',
       '.Price'

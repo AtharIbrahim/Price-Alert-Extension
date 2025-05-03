@@ -168,8 +168,22 @@ function renderAlerts(alerts) {
 }
 
 async function deleteAlert(url) {
-  await new Promise(resolve => {
-    chrome.runtime.sendMessage({ type: 'DELETE_ALERT', url }, resolve);
-  });
-  loadAlerts();
+  try {
+    // Get current alerts
+    const { alerts = [] } = await chrome.storage.local.get('alerts');
+    
+    // Filter out the alert to delete
+    const updatedAlerts = alerts.filter(a => a.url !== url);
+    
+    // Save back to storage
+    await chrome.storage.local.set({ alerts: updatedAlerts });
+    
+    // Update UI
+    loadAlerts();
+    
+    console.log('Alert deleted successfully:', url);
+  } catch (error) {
+    console.error('Error deleting alert:', error);
+    showToast('Failed to delete alert', true);
+  }
 }
