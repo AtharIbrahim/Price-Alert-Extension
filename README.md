@@ -22,7 +22,7 @@ Get automatic price drop notifications from Daraz (Pakistan, Bangladesh, Sri Lan
 ## 🛠️ Installation
 
 ### Method 1: Chrome Web Store (Recommended)
-1. Download from [Chrome Web Store](#) *(Coming soon)*
+1. Download from [Chrome Web Store](https://pricepatrols.netlify.app/)
 
 ### Method 2: Manual Installation
 ```bash
