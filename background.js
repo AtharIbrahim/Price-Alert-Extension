@@ -1,3 +1,19 @@
+// Site configurations
+const SITE_CONFIGS = {
+  daraz: {
+    currency: 'PKR',
+    symbol: 'Rs.'
+  },
+  amazon: {
+    currency: 'USD',
+    symbol: '$'
+  },
+  pakwheels: {
+    currency: 'PKR',
+    symbol: 'Lakh.'
+  }
+};
+
 // Initialize alarms and storage
 chrome.runtime.onInstalled.addListener(async () => {
   const { checkInterval } = await chrome.storage.sync.get(['checkInterval']);
@@ -26,7 +42,7 @@ chrome.alarms.onAlarm.addListener(async (alarm) => {
   if (alarm.name === 'checkPrices') {
     const { alerts = [] } = await chrome.storage.local.get('alerts');
     if (alerts.length > 0) {
-      checkAllAlerts();
+      checkAllAlerts(alerts);
     }
   }
 });
@@ -64,47 +80,57 @@ async function deleteAlert(url, sendResponse) {
   sendResponse({ success: true });
 }
 
-// Check Alert in form of list
-async function checkAllAlerts() {
-  const { alerts = [] } = await chrome.storage.local.get('alerts');
-  
-  for (const alert of alerts) {
-    try {
-      const price = await getCurrentPrice(alert.url, alert.selector);
-      if (price !== null && price <= alert.targetPrice) {
-        showNotification(alert, price);
-        // Update last checked time
-        alert.lastChecked = new Date().toISOString();
-        await chrome.storage.local.set({ alerts });
-      }
-    } catch (error) {
-      console.error('Error checking alert:', error);
-    }
-  }
-}
-
-// Check the current price of product auto after value of time!
+// Check the current price of product
 async function getCurrentPrice(url, selector) {
   return new Promise((resolve) => {
-    // Create an invisible tab
     chrome.tabs.create({ url, active: false }, (tab) => {
       const tabId = tab.id;
       
-      // Listen for tab completion
       const onUpdated = (updatedTabId, changeInfo) => {
         if (updatedTabId === tabId && changeInfo.status === 'complete') {
-          // Execute script to get price
           chrome.scripting.executeScript({
             target: { tabId },
             func: (selector) => {
               const el = document.querySelector(selector);
               if (!el) return null;
-              const priceText = el.textContent.replace(/[^\d.]/g, '');
-              return parseFloat(priceText);
+              
+              const rawText = el.textContent.trim();
+              let numericValue;
+              
+              // Special handling for Daraz prices (e.g., "Rs. 1,234" or "1,234 Rs.")
+              if (window.location.hostname.includes('daraz')) {
+                // Find the first sequence of numbers with commas/decimals
+                const priceMatch = rawText.match(/(\d{1,3}(,\d{3})*(\.\d+)?)/);
+                if (priceMatch) {
+                  numericValue = parseFloat(priceMatch[0].replace(/,/g, ''));
+                } else {
+                  // Fallback to basic parsing if regex fails
+                  numericValue = parseFloat(rawText.replace(/[^\d.]/g, ''));
+                }
+              } else {
+                // Standard parsing for other sites
+                numericValue = parseFloat(rawText.replace(/[^\d.]/g, '').replace(/,/g, ''));
+              }
+              
+              if (isNaN(numericValue)) {
+                console.error('Failed to parse price:', rawText);
+                return null;
+              }
+              
+              console.log('Price parsed:', {
+                site: window.location.hostname,
+                rawText,
+                numericValue,
+                selector
+              });
+              
+              return {
+                rawText,
+                numericPrice: numericValue
+              };
             },
             args: [selector]
           }, ([result]) => {
-            // Clean up
             chrome.tabs.remove(tabId);
             chrome.tabs.onUpdated.removeListener(onUpdated);
             resolve(result?.result || null);
@@ -114,30 +140,77 @@ async function getCurrentPrice(url, selector) {
       
       chrome.tabs.onUpdated.addListener(onUpdated);
       
-      // Timeout fallback
       setTimeout(() => {
         chrome.tabs.remove(tabId);
         chrome.tabs.onUpdated.removeListener(onUpdated);
         resolve(null);
-      }, 10000); // 10 second timeout
+      }, 10000);
     });
   });
 }
 
-// If price hit target then notify user
-function showNotification(alert, currentPrice) {
+// Check Alert in form of list
+async function checkAllAlerts(alerts) {
+  for (const alert of alerts) {
+    try {
+      const priceData = await getCurrentPrice(alert.url, alert.selector);
+      if (!priceData || priceData.numericPrice === null) {
+        console.log('Skipping alert - could not get current price');
+        continue;
+      }
+
+      const currentPrice = priceData.numericPrice;
+      const targetPrice = alert.targetPrice;
+
+      console.log(`Checking alert: ${alert.title}`, {
+        currentPrice,
+        targetPrice,
+        comparison: currentPrice <= targetPrice
+      });
+
+      if (currentPrice <= targetPrice) {
+        console.log('Price alert triggered - condition met');
+        showNotification(alert, priceData);
+        alert.lastChecked = new Date().toISOString();
+        await chrome.storage.local.set({ alerts });
+      } else {
+        console.log('Price alert not triggered - current price above target');
+      }
+    } catch (error) {
+      console.error('Error checking alert:', error);
+    }
+  }
+}
+
+// Show notification to user
+function showNotification(alert, priceData) {
+  const siteConfig = SITE_CONFIGS[alert.site || 'daraz'] || SITE_CONFIGS.daraz;
+  
+  // Format prices with proper thousands separators
+  const formatPrice = (price) => {
+    return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  };
+
+  const currentPriceDisplay = priceData?.rawText || 
+    `${siteConfig.symbol}${formatPrice(priceData?.numericPrice)}`;
+  
+  const targetPriceDisplay = `${siteConfig.symbol}${formatPrice(alert.targetPrice)}`;
+  
   chrome.notifications.create(`alert-${Date.now()}`, {
     type: 'basic',
     iconUrl: 'icons/icon.png',
     title: 'Price Alert Triggered!',
-    message: `${alert.title}\n\nCurrent Price: Rs.${currentPrice}\nYour Target: Rs.${alert.targetPrice}`,
-    buttons: [{ title: 'View Product' }]
+    message: `${alert.title}\n\nCurrent Price: ${currentPriceDisplay}\nYour Target: ${targetPriceDisplay}`,
+    buttons: [{ title: 'View Product' }],
+    priority: 2
   });
 
-  chrome.notifications.onButtonClicked.addListener(function listener(notificationId) {
+  const notificationClickListener = (notificationId) => {
     if (notificationId.startsWith('alert-')) {
       chrome.tabs.create({ url: alert.url, active: true });
-      chrome.notifications.onButtonClicked.removeListener(listener);
+      chrome.notifications.onButtonClicked.removeListener(notificationClickListener);
     }
-  });
+  };
+  
+  chrome.notifications.onButtonClicked.addListener(notificationClickListener);
 }

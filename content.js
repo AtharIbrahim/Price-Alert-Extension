@@ -1,3 +1,42 @@
+// Site configurations
+const SITE_CONFIGS = {
+  daraz: {
+    productPagePatterns: [/\/products\//, /\/pd\//],
+    priceSelectors: [
+      '.pdp-price_size_xl'
+    ],
+    titleSelector: '.pdp-product-title',
+    imageSelector: '.pdp-mod-common-image',
+    currency: 'PKR',
+    symbol: 'Rs.'
+  },
+  amazon: {
+    productPagePatterns: [/\/dp\//, /\/gp\/product\//],
+    priceSelectors: [
+      '.priceToPay',
+      '.a-price-whole',
+      '.a-offscreen',
+      '#priceblock_ourprice',
+      '#priceblock_dealprice'
+    ],
+    titleSelector: '#productTitle',
+    imageSelector: '#landingImage',
+    currency: 'USD',
+    symbol: '$'
+  },
+  pakwheels: {
+    productPagePatterns: [/\/used-cars\//, /\/new-cars\//],
+    priceSelectors: [
+      '.price-box .generic-green',
+      '.price-amount',
+      '.price'
+    ],
+    titleSelector: '.scroll_car_info h1',
+    imageSelector: '.gallery-image img',
+    currency: 'PKR',
+    symbol: 'Lakh.'
+  }
+};
 // Wait for page to load
 if (document.readyState === 'complete') {
   initialize();
@@ -18,9 +57,25 @@ function initialize() {
 }
 
 function isProductPage() {
-  return /\/products\/|\/pd\//.test(window.location.pathname) || 
-         document.querySelector('.pdp-product-price') || 
-         document.querySelector('.price-block');
+  const siteConfig = getCurrentSiteConfig();
+  return siteConfig.productPagePatterns.some(pattern => 
+    pattern.test(window.location.pathname)
+  ) || siteConfig.priceSelectors.some(selector => 
+    document.querySelector(selector)
+  );
+}
+
+function getCurrentSiteConfig() {
+  const hostname = window.location.hostname;
+  
+  if (hostname.includes('amazon.')) {
+    return SITE_CONFIGS.amazon;
+  }
+  if (hostname.includes('pakwheels.')) {
+    return SITE_CONFIGS.pakwheels;
+  }
+  // Default to Daraz configuration
+  return SITE_CONFIGS.daraz;
 }
 
 function createSlidingAlertButton() {
@@ -125,53 +180,74 @@ function createSlidingAlertButton() {
 }
 
 async function handleButtonClick() {
+  const hostname = window.location.hostname; // Add this line
   const priceEl = findPriceElement();
   if (!priceEl) {
     showToast('Could not find product price', true);
     return;
   }
 
-  const currentPrice = parsePrice(priceEl.textContent);
-  const targetPrice = parseFloat(
-    prompt(`Enter target price (Current: Rs.${currentPrice}):`, (currentPrice * 0.9).toFixed(2))
+  const siteConfig = getCurrentSiteConfig();
+  const rawPriceText = priceEl.textContent.trim();
+  const numericPrice = parsePrice(rawPriceText);
+  
+  if (isNaN(numericPrice)) {
+    showToast('Could not parse product price', true);
+    return;
+  }
+
+  const targetPriceInput = prompt(
+    `Enter target price (Current Price: ${rawPriceText}):`, 
+    (numericPrice * 0.9).toFixed(2)
   );
 
-  if (isNaN(targetPrice)) return;
+  if (!targetPriceInput) return;
+
+  const targetPrice = parsePrice(targetPriceInput);
+  if (isNaN(targetPrice)) {
+    showToast('Invalid price entered', true);
+    return;
+  }
 
   const product = {
     url: window.location.href.split('?')[0],
-    title: document.querySelector('.pdp-product-title')?.textContent?.trim() || document.title,
-    image: document.querySelector('.pdp-mod-common-image')?.src,
+    title: document.querySelector(siteConfig.titleSelector)?.textContent?.trim() || document.title,
+    image: document.querySelector(siteConfig.imageSelector)?.src,
     selector: generateSelector(priceEl),
-    currentPrice: currentPrice,
+    currentPrice: numericPrice,
+    currentPriceDisplay: rawPriceText,
     targetPrice: targetPrice,
-    lastChecked: new Date().toISOString()
+    lastChecked: new Date().toISOString(),
+    site: hostname.includes('amazon.') ? 'amazon' : 
+          hostname.includes('pakwheels.') ? 'pakwheels' : 'daraz',
+    currency: siteConfig.currency,
+    symbol: siteConfig.symbol
   };
 
   chrome.runtime.sendMessage({ type: 'SAVE_ALERT', product }, (response) => {
     showToast(response?.success ? 
-      `Alert set for Rs.${targetPrice}!` : 
+      `Alert set for ${product.symbol}${targetPrice}!` :  // Use product.symbol
       'Failed to save alert', !response?.success);
   });
 }
 
 function findPriceElement() {
-  const knownSelectors = [
-    '.pdp-product-price',
-    '.pdp-price',
-    '.price-block',
-    '.uniform-banner-box-price'
-  ];
+  const siteConfig = getCurrentSiteConfig();
   
-  for (const selector of knownSelectors) {
+  // Try configured selectors first
+  for (const selector of siteConfig.priceSelectors) {
     const el = document.querySelector(selector);
     if (el) return el;
   }
   
+  // Fallback to generic price detection
+  const currencyPattern = siteConfig.currency === 'USD' ? 
+    /(\$|USD)\s*[\d,]+/ : 
+    /(Rs\.?|PKR)\s*[\d,]+/;
+  
   const elements = document.querySelectorAll('*');
   for (let el of elements) {
-    if (/(Rs\.?|PKR)\s*[\d,]+/.test(el.textContent) && 
-        el.offsetParent !== null) {
+    if (currencyPattern.test(el.textContent) && el.offsetParent !== null) {
       return el;
     }
   }
@@ -179,9 +255,19 @@ function findPriceElement() {
 }
 
 function parsePrice(text) {
-  return parseFloat(text.replace(/[^\d.]/g, ''));
+  // First remove all non-digit characters except dots and commas
+  let cleaned = text.replace(/[^\d.,]/g, '');
+  
+  // Handle cases where comma is used as decimal separator
+  if (cleaned.match(/,\d{2}$/) && !cleaned.includes('.')) {
+    cleaned = cleaned.replace(',', '.');
+  }
+  
+  // Remove all commas (thousands separators)
+  cleaned = cleaned.replace(/,/g, '');
+  
+  return parseFloat(cleaned);
 }
-
 function generateSelector(el) {
   if (el.id) return `#${el.id}`;
   

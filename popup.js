@@ -1,4 +1,3 @@
-
 document.addEventListener('DOMContentLoaded', () => {
   // Load alerts initially
   loadAlerts();
@@ -61,6 +60,15 @@ function renderAlerts(alerts) {
   alerts.forEach(alert => {
     const li = document.createElement('li');
     li.className = 'alert-item';
+    
+    const currentPriceDisplay = alert.currentPriceDisplay || 
+      `${alert.symbol || 'Rs.'}${alert.currentPrice.toLocaleString('en-US')}`;
+    
+    const targetPriceDisplay = `Target: ${alert.symbol || 'Rs.'}${alert.targetPrice.toLocaleString('en-US', { 
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    })}`;
+    
     li.innerHTML = `
       <div class="alert-header">
         <h3>${alert.title}</h3>
@@ -69,11 +77,17 @@ function renderAlerts(alerts) {
       <div class="alert-details">
         ${alert.image ? `<img src="${alert.image}" alt="Product Image">` : ''}
         <div>
-          <p class="current-price">Rs.${alert.currentPrice}</p>
-          <p class="target-price">Target: Rs.${alert.targetPrice}</p>
+          <p class="current-price">${currentPriceDisplay}</p>
+          <p class="target-price">${targetPriceDisplay}</p>
+          <p class="site-info">${alert.site || 'daraz'}</p>
         </div>
       </div>
     `;
+    
+    li.addEventListener('click', () => {
+      chrome.tabs.create({ url: alert.url, active: true });
+    });
+    
     list.appendChild(li);
   });
   
@@ -92,5 +106,3 @@ async function deleteAlert(url) {
   });
   loadAlerts();
 }
-
-

@@ -12,7 +12,13 @@
   ],
   "host_permissions": [
     "*://*.daraz.pk/*",
-    "*://*.daraz.com/*"
+    "*://*.daraz.com/*",
+    "*://*.amazon.com/*",
+    "*://*.amazon.co.uk/*",
+    "*://*.amazon.de/*",
+    "*://*.amazon.pk/*",
+    "*://*.pakwheels.pk/*",
+    "*://*.pakwheels.com/*"   
   ],
   "background": {
     "service_worker": "background.js"
@@ -31,7 +37,17 @@
         "*://*.daraz.pk/products/*",
         "*://*.daraz.com/products/*",
         "*://*.daraz.pk/pd/*",
-        "*://*.daraz.com/pd/*"
+        "*://*.daraz.com/pd/*",
+        "*://*.amazon.com/*/dp/*",
+        "*://*.amazon.com/*/gp/product/*",
+        "*://*.amazon.co.uk/*/dp/*",
+        "*://*.amazon.de/*/dp/*",
+        "*://*.pakwheels.pk/used-cars/*",
+        "*://*.pakwheels.com/new-cars/*",
+        "*://*.pakwheels.pk/used-cars/*",
+        "*://*.pakwheels.pk/new-cars/*",
+        "*://*.pakwheels.com/used-cars/*",
+        "*://*.pakwheels.com/new-cars/*"   
       ],
       "js": ["content.js"],
       "css": ["content.css"],
