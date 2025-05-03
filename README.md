@@ -3,7 +3,11 @@
 
 Get automatic price drop notifications from Daraz (Pakistan, Bangladesh, Sri Lanka, etc.) without constantly checking products.
 
+![Extension Demo](screenshots/Screenshot%202025-05-01%20164109.png) 
 ![Extension Demo](screenshots/Screenshot%202025-05-01%20163536.png)  
+![Extension Demo](screenshots/Screenshot%202025-05-01%20164224.png)  
+![Extension Demo](screenshots/Screenshot%202025-05-01%20163619.png)  
+ 
 
 
 ## ✨ Features
