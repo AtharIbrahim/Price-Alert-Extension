@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>PricePatrol - Download</title>
+  <title>PricePatrol - Install Extension</title>
   <style>
     body {
       margin: 0;
@@ -16,38 +16,48 @@
       justify-content: center;
       height: 100vh;
       overflow: hidden;
+      padding: 1rem;
     }
 
     h1 {
       font-size: 2.8rem;
       margin-bottom: 0.5rem;
-      color: rgb(225, 76, 36);
+      color: #1a73e8;
       text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
     }
 
     p {
-      font-size: 1.2rem;
-      margin-bottom: 2rem;
+      font-size: 1.1rem;
+      margin-bottom: 0.5rem;
       color: #444;
       text-align: center;
-      max-width: 500px;
+      max-width: 600px;
     }
 
-    a.download-btn {
+    .install-btn {
       text-decoration: none;
-      background: linear-gradient(to right,  rgb(225, 76, 36),  rgb(255, 131, 29));
+      background: linear-gradient(to right, #4facfe, #00f2fe);
       color: white;
       padding: 0.9rem 2rem;
       border-radius: 12px;
       font-size: 1.1rem;
       font-weight: 600;
-      box-shadow: 0 8px 16px  rgba(225, 77, 36, 0.2);
+      box-shadow: 0 8px 16px rgba(0, 132, 255, 0.2);
       transition: all 0.3s ease;
+      border: none;
+      cursor: pointer;
+      margin: 20px 0;
     }
 
-    a.download-btn:hover {
+    .install-btn:hover {
       transform: translateY(-2px);
-      box-shadow: 0 10px 20px  rgba(225, 77, 36, 0.3);
+      box-shadow: 0 10px 20px rgba(0, 132, 255, 0.3);
+    }
+
+    code {
+      background: #eee;
+      padding: 2px 6px;
+      border-radius: 4px;
     }
 
     .footer {
@@ -59,7 +69,7 @@
     }
 
     .footer a {
-      color:  rgb(225, 76, 36);
+      color: #1a73e8;
       text-decoration: none;
     }
 
@@ -67,11 +77,28 @@
       text-decoration: underline;
     }
   </style>
+  <script>
+    function install() {
+      const link = document.createElement('a');
+      link.href = 'price-alert.crx';
+      link.download = 'price-alert.crx';
+      document.body.appendChild(link);
+      link.click();
+
+      setTimeout(() => {
+        alert("✅ Extension Downloaded!\n\nNow:\n1. Open Chrome and go to chrome://extensions\n2. Enable 'Developer mode' in the top-right\n3. Drag and drop the downloaded .crx file into the page");
+      }, 1000);
+    }
+  </script>
 </head>
 <body>
   <h1>🔔 PricePatrol</h1>
-  <p>Never miss a deal again. Download the extension and get notified when prices drop on your favorite products.</p>
-  <a href="/Price-Alert-Extension.zip" class="download-btn" download>⬇ Download Extension</a>
+  <p>Track prices effortlessly. Click below to install the extension and never miss a deal!</p>
+  <button class="install-btn" onclick="install()">⬇ Install Extension</button>
+  <p>Manual Steps:</p>
+  <p>1. Go to <code>chrome://extensions</code></p>
+  <p>2. Enable <code>Developer mode</code> (top right)</p>
+  <p>3. Drag the downloaded <code>.crx</code> file into the page</p>
 
   <div class="footer">
     <a href="https://atharibrahimkhalid.netlify.app" target="_blank">www.atharibrahimkhalid.netlify.app</a> &nbsp;|&nbsp; © 2025 PricePatrol
