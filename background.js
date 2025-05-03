@@ -6,7 +6,7 @@ chrome.runtime.onInstalled.addListener(async () => {
   chrome.storage.local.set({ alerts: [] });
 });
 
-// Message handler
+// Handle Messages
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   switch (request.type) {
     case 'SAVE_ALERT':
