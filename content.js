@@ -1,4 +1,4 @@
-// Add this at the top of content.js
+// Add sites for settings
 const SITES = {
   DARAZ: 'daraz',
   AMAZON: 'amazon',
@@ -18,7 +18,7 @@ const SITE_CONFIGS = {
     symbol: 'Rs.'
   },
   amazon: {
-    productPagePatterns: [/\/dp\//, /\/gp\/product\//],
+    productPagePatterns: [/\/dp\//, /\/gp\/product\//, /\/pd\//, /\/gp\//],
     priceSelectors: [
       '.priceToPay',
       '.a-price-whole',
@@ -39,7 +39,7 @@ const SITE_CONFIGS = {
       '.price'
     ],
     titleSelector: '.scroll_car_info h1',
-    imageSelector: '.gallery-image img',
+    imageSelector: '.slider-thumb',
     currency: 'PKR',
     symbol: 'Lakh.'
   }
@@ -51,7 +51,7 @@ if (document.readyState === 'complete') {
   window.addEventListener('load', initialize);
 }
 
-// Modify the initialize function
+// Initialize along with the save settings
 async function initialize() {
   // First check if this site is enabled
   const { enabledSites } = await chrome.storage.sync.get(['enabledSites']);
@@ -78,6 +78,7 @@ async function initialize() {
   }, 500);
 }
 
+// Get current checked sites
 function getCurrentSite() {
   const hostname = window.location.hostname;
   if (hostname.includes('daraz')) return SITES.DARAZ;
@@ -86,6 +87,7 @@ function getCurrentSite() {
   return null;
 }
 
+// Verify that user is in site product page or not!
 function isProductPage() {
   const siteConfig = getCurrentSiteConfig();
   return siteConfig.productPagePatterns.some(pattern => 
@@ -95,6 +97,7 @@ function isProductPage() {
   );
 }
 
+// Get User current site location
 function getCurrentSiteConfig() {
   const hostname = window.location.hostname;
   
@@ -108,6 +111,7 @@ function getCurrentSiteConfig() {
   return SITE_CONFIGS.daraz;
 }
 
+// Floating button for site
 function createSlidingAlertButton() {
   if (document.getElementById('dpa-sliding-btn')) return;
   
@@ -209,6 +213,7 @@ function createSlidingAlertButton() {
   document.head.appendChild(style);
 }
 
+// When button clicked then>
 async function handleButtonClick() {
   const { enabledSites } = await chrome.storage.sync.get(['enabledSites']);
   const currentSite = getCurrentSite();
@@ -268,6 +273,7 @@ async function handleButtonClick() {
   });
 }
 
+
 function findPriceElement() {
   const siteConfig = getCurrentSiteConfig();
   
@@ -305,6 +311,7 @@ function parsePrice(text) {
   
   return parseFloat(cleaned);
 }
+
 function generateSelector(el) {
   if (el.id) return `#${el.id}`;
   

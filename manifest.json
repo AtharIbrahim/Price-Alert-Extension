@@ -39,15 +39,15 @@
         "*://*.daraz.pk/pd/*",
         "*://*.daraz.com/pd/*",
         "*://*.amazon.com/*/dp/*",
+        "*://*.amazon.com/dp/*",
+        "*://*.amazon.com/gp/*",
         "*://*.amazon.com/*/gp/product/*",
         "*://*.amazon.co.uk/*/dp/*",
         "*://*.amazon.de/*/dp/*",
         "*://*.pakwheels.pk/used-cars/*",
         "*://*.pakwheels.com/new-cars/*",
-        "*://*.pakwheels.pk/used-cars/*",
         "*://*.pakwheels.pk/new-cars/*",
-        "*://*.pakwheels.com/used-cars/*",
-        "*://*.pakwheels.com/new-cars/*"   
+        "*://*.pakwheels.com/used-cars/*"
       ],
       "js": ["content.js"],
       "css": ["content.css"],
