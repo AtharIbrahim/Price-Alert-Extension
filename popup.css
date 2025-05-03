@@ -213,3 +213,20 @@ h1 {
 .settings-button:hover svg {
   fill: #f57224; /* Orange color on hover */
 }
+
+
+/*  */
+.site-toggle {
+  display: flex;
+  align-items: center;
+  margin: 8px 0;
+}
+
+.site-toggle input {
+  margin-right: 10px;
+}
+
+.site-toggle label {
+  font-weight: normal;
+  cursor: pointer;
+}

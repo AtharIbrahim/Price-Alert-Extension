@@ -1,3 +1,10 @@
+// Add this at the top of content.js
+const SITES = {
+  DARAZ: 'daraz',
+  AMAZON: 'amazon',
+  PAKWHEELS: 'pakwheels'
+};
+
 // Site configurations
 const SITE_CONFIGS = {
   daraz: {
@@ -44,7 +51,22 @@ if (document.readyState === 'complete') {
   window.addEventListener('load', initialize);
 }
 
-function initialize() {
+// Modify the initialize function
+async function initialize() {
+  // First check if this site is enabled
+  const { enabledSites } = await chrome.storage.sync.get(['enabledSites']);
+  const hostname = window.location.hostname;
+  
+  let currentSite;
+  if (hostname.includes('daraz')) currentSite = SITES.DARAZ;
+  else if (hostname.includes('amazon')) currentSite = SITES.AMAZON;
+  else if (hostname.includes('pakwheels')) currentSite = SITES.PAKWHEELS;
+  
+  if (!enabledSites?.includes(currentSite)) {
+    console.log('Price alerts disabled for this site');
+    return;
+  }
+
   if (!isProductPage()) return;
   
   const interval = setInterval(() => {
@@ -54,6 +76,14 @@ function initialize() {
       createSlidingAlertButton();
     }
   }, 500);
+}
+
+function getCurrentSite() {
+  const hostname = window.location.hostname;
+  if (hostname.includes('daraz')) return SITES.DARAZ;
+  if (hostname.includes('amazon')) return SITES.AMAZON;
+  if (hostname.includes('pakwheels')) return SITES.PAKWHEELS;
+  return null;
 }
 
 function isProductPage() {
@@ -180,6 +210,13 @@ function createSlidingAlertButton() {
 }
 
 async function handleButtonClick() {
+  const { enabledSites } = await chrome.storage.sync.get(['enabledSites']);
+  const currentSite = getCurrentSite();
+  
+  if (!enabledSites?.includes(currentSite)) {
+    showToast('Price alerts are disabled for this site', true);
+    return;
+  }
   const hostname = window.location.hostname; // Add this line
   const priceEl = findPriceElement();
   if (!priceEl) {

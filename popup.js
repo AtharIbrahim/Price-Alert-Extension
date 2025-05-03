@@ -1,3 +1,9 @@
+// Add this at the top with other constants
+const SITES = {
+  DARAZ: 'daraz',
+  AMAZON: 'amazon',
+  PAKWHEELS: 'pakwheels'
+};
 document.addEventListener('DOMContentLoaded', () => {
   // Load alerts initially
   loadAlerts();
@@ -19,21 +25,72 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('saveSettings').addEventListener('click', saveSettings);
 });
 
+// Update loadSettings function
 async function loadSettings() {
-  const { checkInterval = 15 } = await chrome.storage.sync.get(['checkInterval']);
-  document.getElementById('checkInterval').value = checkInterval;
+  const settings = await chrome.storage.sync.get([
+    'checkInterval', 
+    'enabledSites'
+  ]);
+  
+  document.getElementById('checkInterval').value = settings.checkInterval || 15;
+  
+  // Set site toggles
+  const enabledSites = settings.enabledSites || [
+    SITES.DARAZ, 
+    SITES.AMAZON, 
+    SITES.PAKWHEELS
+  ];
+  
+  document.getElementById('toggleDaraz').checked = enabledSites.includes(SITES.DARAZ);
+  document.getElementById('toggleAmazon').checked = enabledSites.includes(SITES.AMAZON);
+  document.getElementById('togglePakWheels').checked = enabledSites.includes(SITES.PAKWHEELS);
 }
 
+// Update saveSettings function
 async function saveSettings() {
   const interval = parseInt(document.getElementById('checkInterval').value);
   
-  await chrome.storage.sync.set({ checkInterval: interval });
+  const enabledSites = [];
+  if (document.getElementById('toggleDaraz').checked) enabledSites.push(SITES.DARAZ);
+  if (document.getElementById('toggleAmazon').checked) enabledSites.push(SITES.AMAZON);
+  if (document.getElementById('togglePakWheels').checked) enabledSites.push(SITES.PAKWHEELS);
+  
+  await chrome.storage.sync.set({ 
+    checkInterval: interval,
+    enabledSites
+  });
+  
   chrome.alarms.create('checkPrices', { periodInMinutes: interval });
   
-  // Show success message
   const status = document.getElementById('status-message');
   status.textContent = 'Settings saved successfully!';
   setTimeout(() => status.textContent = '', 2000);
+}
+
+// Update checkAllAlerts to respect enabled sites
+async function checkAllAlerts(alerts) {
+  const { enabledSites } = await chrome.storage.sync.get(['enabledSites']);
+  
+  for (const alert of alerts) {
+    try {
+      // Skip if site is disabled
+      if (!enabledSites?.includes(alert.site)) {
+        console.log(`Skipping alert for ${alert.site} - site disabled`);
+        continue;
+      }
+      
+      const priceData = await getCurrentPrice(alert.url, alert.selector);
+      if (!priceData || priceData.numericPrice === null) continue;
+
+      if (priceData.numericPrice <= alert.targetPrice) {
+        showNotification(alert, priceData);
+        alert.lastChecked = new Date().toISOString();
+        await chrome.storage.local.set({ alerts });
+      }
+    } catch (error) {
+      console.error('Error checking alert:', error);
+    }
+  }
 }
 
 async function loadAlerts() {
