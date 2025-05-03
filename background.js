@@ -31,6 +31,7 @@ chrome.alarms.onAlarm.addListener(async (alarm) => {
   }
 });
 
+// Save Alert in Extension
 async function saveAlert(product, sendResponse) {
   try {
     const { alerts = [] } = await chrome.storage.local.get('alerts');
@@ -49,11 +50,13 @@ async function saveAlert(product, sendResponse) {
   }
 }
 
+// Get Alert in Extension
 async function getAlerts(sendResponse) {
   const { alerts = [] } = await chrome.storage.local.get('alerts');
   sendResponse(alerts);
 }
 
+// Delete Alert
 async function deleteAlert(url, sendResponse) {
   const { alerts = [] } = await chrome.storage.local.get('alerts');
   const updated = alerts.filter(a => a.url !== url);
@@ -61,6 +64,7 @@ async function deleteAlert(url, sendResponse) {
   sendResponse({ success: true });
 }
 
+// Check Alert in form of list
 async function checkAllAlerts() {
   const { alerts = [] } = await chrome.storage.local.get('alerts');
   
@@ -79,6 +83,7 @@ async function checkAllAlerts() {
   }
 }
 
+// Check the current price of product auto after value of time!
 async function getCurrentPrice(url, selector) {
   return new Promise((resolve) => {
     // Create an invisible tab
@@ -119,6 +124,7 @@ async function getCurrentPrice(url, selector) {
   });
 }
 
+// If price hit target then notify user
 function showNotification(alert, currentPrice) {
   chrome.notifications.create(`alert-${Date.now()}`, {
     type: 'basic',
