@@ -6,7 +6,6 @@ Get automatic price drop notifications from Daraz (Pakistan, Bangladesh, Sri Lan
 ![Extension Demo](screenshots/Screenshot%202025-05-01%20164109.png) 
 ![Extension Demo](screenshots/Screenshot%202025-05-04%20095259.png) 
 <p align="center">
-  <img src="screenshots/Screenshot 2025-05-01 163536.png" height="200"/>
   <img src="screenshots/Screenshot 2025-05-01 164224.png" height="200"/>
   <img src="screenshots/Screenshot%202025-05-04%20095835.png" height="200"/>
   <img src="screenshots/Screenshot%202025-05-04%20095040.png" height="400"/>
@@ -41,12 +40,25 @@ Get automatic price drop notifications from Daraz (Pakistan, Bangladesh, Sri Lan
 6. Select the cloned folder
 
 ### Method 2: Manual Installation
-```bash
-# Clone the repository
-git clone https://github.com/yourusername/daraz-price-alert.git
 
-# Load in Chrome:
-1. Go to chrome://extensions
-2. Enable "Developer mode" (top-right)
-3. Click "Load unpacked"
-4. Select the cloned folder
+
+1. git clone https://github.com/yourusername/daraz-price-alert.git
+2. Go to chrome://extensions
+3. Enable "Developer mode" (top-right)
+4. Click "Load unpacked"
+5. Select the cloned folder
+
+
+## 👤 Author
+
+<ul>
+  <li><strong>Name</strong>: Athar Ibrahim Khalid</li>
+  <li><strong>GitHub</strong>: <a href="https://github.com/AtharIbrahim/" target="_blank">https://github.com/AtharIbrahim/</a></li>
+  <li><strong>LinkedIn</strong>: <a href="https://www.linkedin.com/in/athar-ibrahim-khalid-0715172a2/" target="_blank">LinkedIn Profile</a></li>
+  <li><strong>Website</strong>: <a href="https://atharibrahimkhalid.netlify.app/" target="_blank">Athar Ibrahim Khalid</a></li>
+</ul>
+
+
+## 📝 License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE.txt) file for details.
