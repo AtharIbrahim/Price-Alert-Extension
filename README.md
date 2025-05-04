@@ -42,7 +42,7 @@ Get automatic price drop notifications from Daraz (Pakistan, Bangladesh, Sri Lan
 ### Method 2: Manual Installation
 
 
-1. git clone https://github.com/yourusername/daraz-price-alert.git
+1. git clone https://github.com/AtharIbrahim/Price-Alert-Extension
 2. Go to chrome://extensions
 3. Enable "Developer mode" (top-right)
 4. Click "Load unpacked"
