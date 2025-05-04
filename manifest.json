@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Daraz Price Alert",
+  "name": "Price Patrol",
   "version": "1.0",
   "description": "Get notified when prices drop",
   "permissions": [
